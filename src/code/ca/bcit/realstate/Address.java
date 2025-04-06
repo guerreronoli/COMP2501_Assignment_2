@@ -9,18 +9,39 @@ package ca.bcit.realstate;
  */
 public class Address
 {
+    /**
+     * Maximum allowed characters for the unit number.
+     */
     public static final int MAX_UNIT_NUMBER_CHARACTERS = 4;
 
-    public static final int STREET_NUMBER_START = 0;
-    public static final int STREET_NUMBER_END   = 999999;
+    /**
+     * Starting range for valid street numbers.
+     */
+    public static final int STREET_NUMBER_MIN = 0;
 
-    public static final int MIN_STREET_NAME_CHARACTERS = 1;
+    /**
+     * Ending range for valid street numbers.
+     */
+    public static final int STREET_NUMBER_MAX = 999999;
+
+    /**
+     * Maximum allowed characters for the street name.
+     */
     public static final int MAX_STREET_NAME_CHARACTERS = 20;
 
+    /**
+     * Minimum required characters for a postal code.
+     */
     public static final int MIN_POSTAL_CODE_CHARACTERS = 5;
+
+    /**
+     * Maximum allowed characters for a postal code.
+     */
     public static final int MAX_POSTAL_CODE_CHARACTERS = 6;
 
-    public static final int MIN_CITY_CHARACTERS = 1;
+    /**
+     * Maximum allowed characters for the city name.
+     */
     public static final int MAX_CITY_CHARACTERS = 30;
 
     private final String unitNumber;
@@ -60,8 +81,8 @@ public class Address
             }
         }
 
-        if(streetNumber < STREET_NUMBER_START ||
-           streetNumber > STREET_NUMBER_END)
+        if(streetNumber < STREET_NUMBER_MIN ||
+           streetNumber > STREET_NUMBER_MAX)
         {
             throw new IllegalArgumentException("Invalid street number: " +
                                                 streetNumber);
@@ -116,32 +137,12 @@ public class Address
         this.city         = city;
     }
 
-    @Override
-    public String toString()
-    {
-        final String simpleClassName;
-        simpleClassName = getClass().getSimpleName();
-
-        return String.format("%s["              +
-                             "unitNumber=%s, "   +
-                             "streetNumber=%d, " +
-                             "streetName=%s, "   +
-                             "postalCode=%s, "   +
-                             "city=%s]",
-                             simpleClassName,
-                             unitNumber,
-                             streetNumber,
-                             streetName,
-                             postalCode,
-                             city);
-    }
-
     /**
      * Returns the unit number.
      *
      * @return the unit number (maybe null)
      */
-    public String getUnitNumber()
+    public final String getUnitNumber()
     {
         return unitNumber;
     }
@@ -151,7 +152,7 @@ public class Address
      *
      * @return the street number
      */
-    public int getStreetNumber()
+    public final int getStreetNumber()
     {
         return streetNumber;
     }
@@ -161,7 +162,7 @@ public class Address
      *
      * @return the street name
      */
-    public String getStreetName()
+    public final String getStreetName()
     {
         return streetName;
     }
@@ -171,7 +172,7 @@ public class Address
      *
      * @return the postal code
      */
-    public String getPostalCode()
+    public final String getPostalCode()
     {
         return postalCode;
     }
@@ -181,8 +182,31 @@ public class Address
      *
      * @return the city name
      */
-    public String getCity()
+    public final String getCity()
     {
         return city;
+    }
+
+    /**
+     * Returns a string representation of the object.
+     * The format includes the class name and key address components:
+     * unit number, street number, street name, postal code, and city.
+     *
+     * @return a formatted string representing the object's address.
+     */
+    @Override
+    public String toString()
+    {
+        final String className;
+        className = getClass().getSimpleName();
+
+        return String.format(
+                "%s[unitNumber=%s, streetNumber=%d, streetName=%s, postalCode=%s, city=%s]",
+                className,
+                unitNumber,
+                streetNumber,
+                streetName,
+                postalCode,
+                city);
     }
 }

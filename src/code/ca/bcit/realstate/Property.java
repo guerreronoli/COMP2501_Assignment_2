@@ -9,13 +9,23 @@ package ca.bcit.realstate;
  */
 public class Property
 {
+    /**
+     * Predefined property types including residence, commercial, and retail.
+     */
     public static final String[] PROPERTY_TYPE = {
             "residence",
             "commercial",
             "retail"
     };
 
+    /**
+     * Represents the default invalid price.
+     */
     public static final int INVALID_PRICE = 0;
+
+    /**
+     * Maximum allowed characters for the property ID.
+     */
     public static final int MAX_PROPERTY_ID_CHARACTERS = 6;
 
     private final Address address;
@@ -127,19 +137,28 @@ public class Property
         return propertyId;
     }
 
+    /**
+     * Returns a string representation of the Property object.
+     * The representation includes the property's price in USD,
+     * its address, type, and unique property ID.
+     *
+     * @return a formatted string containing the property details
+     */
     @Override
     public String toString()
     {
+        final String address;
+        address = this.address.toString();
 
-        return String.format("Property[" +
-                             "propertyId=%s, " +
-                             "type=%s, " +
+        return String.format("toString()=Property["       +
                              "priceUsd=%.1f, " +
-                             "%s]",
-                             propertyId,
-                             type,
+                             "%s, "            +
+                             "type=%s, "       +
+                             "propertyId=%s]",
                              priceUsd,
-                             address.toString());
+                             address,
+                             type,
+                             propertyId);
     }
 
     /*

@@ -5,16 +5,33 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * The AddressReader class is used to read address data from a file
+ * and convert it into a list of Address objects.
+ * The file is expected to contain delimited address data.
+ *
+ * @author Noli Guerrero (A00871068)
+ * @version 1.0
+ */
 public class AddressReader
 {
-    public static final int UNIT_NUMBER_INDEX   = 0;
-    public static final int STREET_NUMBER_INDEX = 1;
-    public static final int STREET_NAME_INDEX   = 2;
-    public static final int POSTAL_CODE_INDEX   = 3;
-    public static final int CITY_INDEX          = 4;
+    private static final int UNIT_NUMBER_INDEX   = 0;
+    private static final int STREET_NUMBER_INDEX = 1;
+    private static final int STREET_NAME_INDEX   = 2;
+    private static final int POSTAL_CODE_INDEX   = 3;
+    private static final int CITY_INDEX          = 4;
 
-    public static final String REGEX_DELIMITER = "\\|";
+    private static final String REGEX_DELIMITER = "\\|";
 
+    /**
+     * Reads address data from the specified file and converts it into a list of Address objects.
+     *
+     * @param file the file containing the address data
+     *
+     * @return a list of Address objects
+     *
+     * @throws FileNotFoundException if the file cannot be found
+     */
     public static ArrayList<Address> readAddressData(final File file)
                                             throws FileNotFoundException
     {

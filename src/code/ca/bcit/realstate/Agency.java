@@ -11,20 +11,21 @@ import java.util.*;
  */
 public class Agency
 {
-    public static final String SINGLE_SPACE = " ";
-
+    /**
+     * A constant representing the first position in a property list.
+     */
     public static final int FIRST_PROPERTY_LIST_POSITION = 0;
 
-    public static final int FIRST_STRING_CHARACTER  = 0;
-    public static final int SECOND_STRING_CHARACTER = 1;
-
+    /**
+     * A constant representing the index of the first character in a string.
+     */
     public static final double MIN_TOTAL_PROPERTY_VALUES = 0;
 
     private final String               name;
     private final Map<String, Property> properties;
 
     /**
-     * Constructs an ca.bcit.realstate.Agency with the specified name.
+     * Constructs a ca.bcit.realstate.Agency with the specified name.
      *
      * @param name the name of the agency
      */
@@ -39,7 +40,7 @@ public class Agency
      *
      * @return the name of the agency
      */
-    public String getName()
+    public final String getName()
     {
         return name;
     }
@@ -49,7 +50,7 @@ public class Agency
      *
      * @param property the property to add
      */
-    public void addProperty(final Property property)
+    public final void addProperty(final Property property)
     {
         if(property != null)
         {
@@ -63,7 +64,7 @@ public class Agency
      *
      * @param propertyId the ID of the property to remove
      */
-    public void removeProperty(final String propertyId)
+    public final void removeProperty(final String propertyId)
     {
         if(propertyId != null)
         {
@@ -79,7 +80,7 @@ public class Agency
      *
      * @return the property with the given ID, or null if not found
      */
-    public Property getProperty(final String propertyId)
+    public final Property getProperty(final String propertyId)
     {
         if(propertyId == null)
         {
@@ -98,7 +99,7 @@ public class Agency
      *
      * @return the total value of all properties
      */
-    public double getTotalPropertyValues()
+    public final double getTotalPropertyValues()
     {
         double totalPropertyValues;
         totalPropertyValues = MIN_TOTAL_PROPERTY_VALUES;
@@ -115,7 +116,7 @@ public class Agency
     /**
      * Retrieves properties that have swimming pools.
      *
-     * @return a list of properties with swimming pools, or null if none found
+     * @return a list of properties with swimming pools
      */
     public ArrayList<Residence> getPropertiesWithPools()
     {
@@ -136,14 +137,7 @@ public class Agency
             }
         }
 
-        if(propertiesWithPools.isEmpty())
-        {
-            return null;
-        }
-        else
-        {
-            return propertiesWithPools;
-        }
+        return propertiesWithPools;
     }
 
     /**
@@ -152,13 +146,15 @@ public class Agency
      * @param minPriceUsd the minimum price in USD
      * @param maxPriceUsd the maximum price in USD
      *
-     * @return an array of properties within the given price range
+     * @return an array of properties within the given price range,
+     *          or null if none found
      */
     public Property[] getPropertiesBetween(final double minPriceUsd,
                                            final double maxPriceUsd)
     {
         final List<Property> propertyList;
         final Property[] propertyArray;
+        final boolean    emptyArrayList;
 
         propertyList = new ArrayList<>();
 
@@ -169,6 +165,13 @@ public class Agency
             {
                 propertyList.add(property);
             }
+        }
+
+        emptyArrayList = properties.isEmpty();
+
+        if(emptyArrayList)
+        {
+            return null;
         }
 
         propertyArray = propertyList.toArray(new Property[FIRST_PROPERTY_LIST_POSITION]);
@@ -188,17 +191,26 @@ public class Agency
     public ArrayList<Address> getPropertiesOn(final String streetName)
     {
         final ArrayList<Address> matchAddresses;
+        final boolean            emptyArrayList;
+
         matchAddresses = new ArrayList<>();
 
         for(final Property property : properties.values())
         {
-            if(property.getAddress().getStreetName().equalsIgnoreCase(streetName))
+            final boolean propertyFound;
+
+            propertyFound = property.getAddress().
+                                    getStreetName().
+                                    equalsIgnoreCase(streetName);
+            if(propertyFound)
             {
                 matchAddresses.add(property.getAddress());
             }
         }
 
-        if(matchAddresses.isEmpty())
+        emptyArrayList = matchAddresses.isEmpty();
+
+        if(emptyArrayList)
         {
             return null;
         }
@@ -221,7 +233,8 @@ public class Agency
     public HashMap<String, Residence> getPropertiesWithBedrooms(final int minBedrooms,
                                                                final int maxBedrooms)
     {
-        final HashMap<String, Residence> residenceProperties = new HashMap<>();
+        final HashMap<String, Residence> residenceProperties;
+        residenceProperties = new HashMap<>();
 
         for(final Property property : properties.values())
         {
@@ -272,6 +285,11 @@ public class Agency
 
     }
 
+    /**
+     * Get a list of commercial properties with loading docks.
+     *
+     * @return a list of commercial properties with loading docks.
+     */
     public ArrayList<Commercial> getPropertiesWithLoadingDocks()
     {
         final ArrayList<Commercial> commercialProperties;
@@ -284,7 +302,7 @@ public class Agency
                 final Commercial commercial;
                 commercial = (Commercial) property;
 
-                if(commercial.loadingDock())
+                if(commercial.hasLoadingDock())
                 {
                     commercialProperties.add(commercial);
                 }
@@ -295,6 +313,11 @@ public class Agency
 
     }
 
+    /**
+     * Get a list of commercial properties with highway access.
+     *
+     * @return a list of commercial properties with highway access.
+     */
     public ArrayList<Commercial> getPropertiesWithHighwayAccess()
     {
         final ArrayList<Commercial> commercialProperties;
@@ -307,25 +330,30 @@ public class Agency
                 final Commercial commercial;
                 commercial = (Commercial) property;
 
-                if(commercial.highwayAccess())
+                if(commercial.hasHighwayAccess())
                 {
                     commercialProperties.add(commercial);
                 }
             }
         }
 
-        if(commercialProperties.isEmpty())
-        {
-            return null;
-        }
-
         return commercialProperties;
 
     }
 
+    /**
+     * Filters and retrieves a list of Retail properties with a square footage
+     * greater than or equal to the specified value.
+     *
+     * @param squareFootage the minimum square footage to filter Retail properties
+     *
+     * @return a list of Retail properties matching the square footage criteria,
+     *         or null if no such properties are found
+     */
     public ArrayList<Retail> getPropertiesSquareFootage(final int squareFootage)
     {
         final ArrayList<Retail> retailProperties;
+
         retailProperties = new ArrayList<>();
 
         for(final Property property : properties.values())
@@ -333,9 +361,10 @@ public class Agency
             if(property instanceof  Retail)
             {
                 final Retail retail;
+
                 retail = (Retail) property;
 
-                if(retail.squareFootage() >= squareFootage)
+                if(retail.getSquareFootage() >= squareFootage)
                 {
                     retailProperties.add(retail);
                 }
@@ -350,6 +379,13 @@ public class Agency
         return retailProperties;
     }
 
+
+    /**
+     * Retrieves a list of Retail properties that offer customer parking.
+     *
+     * @return a list of Retail properties with customer parking,
+     *         or null if no such properties are found
+     */
     public ArrayList<Retail> getPropertiesWithCustomerParking()
     {
         final ArrayList<Retail> retailProperties;
@@ -362,7 +398,7 @@ public class Agency
                 final Retail retail;
                 retail = (Retail) property;
 
-                if(retail.customerParking())
+                if(retail.hasCustomerParking())
                 {
                     retailProperties.add(retail);
                 }
@@ -377,6 +413,11 @@ public class Agency
         return retailProperties;
     }
 
+    /**
+     * Get a list of residence in a strata.
+     *
+     * @return a list of residence in a strata.
+     */
     public ArrayList<Residence> getPropertiesWithStrata()
     {
         final ArrayList<Residence> residenceProperties;
@@ -389,86 +430,14 @@ public class Agency
                 final Residence residence;
                 residence = (Residence) property;
 
-                if(residence.strata())
+                if(residence.hasStrata())
                 {
                     residenceProperties.add(residence);
                 }
             }
         }
 
-        if(residenceProperties.isEmpty())
-        {
-            return null;
-        }
-
         return residenceProperties;
     }
-
-    /*
-     * Formats property details into a readable string.
-     *
-     * @param property the property object
-     * @param address  the address of the property
-     *
-     * @return formatted property details
-     */
-//    private String getPropertyDetails(Property property, Address address)
-//    {
-//        final String unitNumber      = address.getUnitNumber() == null ? "":
-//                                        " unit #" + address.getUnitNumber() + " at";
-//        final int    streetNumber    = address.getStreetNumber();
-//        final String postalCode      = address.getPostalCode().toUpperCase();
-//
-//        final String streetName      = getProperString(address.getStreetName());
-//        final String city            = getProperString(address.getCity());
-//        final String propertyId      = property.getPropertyId();
-//        final String numberOfBedroom = property.getNumberOfBedrooms() +
-//                                        (property.getNumberOfBedrooms() == Property.MIN_NUMBER_OF_BEDROOMS ?
-//                                                " bedroom" : " bedrooms");
-//        final double priceUsd        = property.getPriceUsd();
-//        final String hasPool         = property.hasSwimmingPool() ? " plus pool":"";
-//
-//        return String.format(") ca.bcit.realstate.Property %s:%s %d %s %s in %s (%s%s): $%.0f.\n",
-//                             propertyId,
-//                             unitNumber,
-//                             streetNumber,
-//                             streetName,
-//                             postalCode,
-//                             city,
-//                             numberOfBedroom,
-//                             hasPool,
-//                             priceUsd);
-//    }
-
-    /*
-     * Converts a string to proper case format.
-     *
-     * @param value the string to format
-     * @return the formatted string
-     */
-    private String getProperString(final String value)
-    {
-        final String[] words = value.toLowerCase().split(SINGLE_SPACE);
-
-        final int lastWordIndex;
-        lastWordIndex = words.length - 1;
-
-        StringBuilder properString = new StringBuilder();
-
-        for(int i = 0; i < words.length; i++)
-        {
-            properString.append(Character.toUpperCase(words[i].charAt(FIRST_STRING_CHARACTER)));
-            properString.append(words[i].substring(SECOND_STRING_CHARACTER));
-
-            //If it's not the last word, add a space
-            if(i != lastWordIndex)
-            {
-                properString.append(SINGLE_SPACE);
-            }
-        }
-
-        return properString.toString();
-    }
-
 
 }
